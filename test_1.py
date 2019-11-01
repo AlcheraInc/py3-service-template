@@ -10,17 +10,24 @@ import asyncio
 import logging
 from concurrent import futures
 
-from service import start_serve, remote
+from service import start_secure_serve, remote, read_from_file
 from client import create_dir
 
 logging.info("service address: {}".format(remote))
+
+# read in the certificate and create credentials
+creds = grpc.ssl_channel_credentials(
+    root_certificates=read_from_file('server.crt'))
+logging.info("test credentials: {}".format(creds))
+
+# start a service
 executor = futures.ThreadPoolExecutor(max_workers=5)
-start_serve(remote, executor)
+start_secure_serve(remote, executor, 'server.key', 'server.crt')
 
 
 @pytest.mark.asyncio
 async def test_create_dir():
-    with grpc.insecure_channel(remote) as channel:
+    with grpc.secure_channel(remote, creds) as channel:
         res = await create_dir(channel)
 
         logging.debug("create_dir: {} {} {}".format(

@@ -33,8 +33,27 @@ def start_serve(remote: str, thread_pool: futures.ThreadPoolExecutor) -> grpc.Se
     return launcher
 
 
+def read_from_file(fpath: str):
+    with open(fpath, 'rb') as f:
+        return f.read()
+
+
+def start_secure_serve(remote: str, thread_pool: futures.ThreadPoolExecutor,
+                       key_path: str = 'server.key', cert_path: str = 'server.pem') -> grpc.Server:
+    # generate credential with the key and certificate
+    key_data = read_from_file(key_path)
+    cert_chain = read_from_file(cert_path)
+    creds = grpc.ssl_server_credentials(((key_data, cert_chain,),))
+
+    # create server with credentials
+    launcher = make_service(thread_pool)
+    launcher.add_secure_port(remote, creds)
+    launcher.start()
+    return launcher
+
+
 async def serve(remote: str, thread_pool: futures.ThreadPoolExecutor):
-    launcher = await start_serve(remote, thread_pool)
+    launcher = start_serve(remote, thread_pool)
     await launcher.wait_for_termination()
 
 
@@ -45,6 +64,7 @@ if __name__ == "__main__":
         remote = sys.argv[1]
     logging.info("service address: {}".format(remote))
     executor = futures.ThreadPoolExecutor(max_workers=5)
+
     asyncio.get_event_loop().run_until_complete(
         serve(remote, executor)
     )
