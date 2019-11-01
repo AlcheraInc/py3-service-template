@@ -11,18 +11,20 @@ import logging
 from concurrent import futures
 
 from service import start_serve, remote
+from client import create_dir
 
 logging.info("service address: {}".format(remote))
 executor = futures.ThreadPoolExecutor(max_workers=5)
 start_serve(remote, executor)
 
 
-async def print_channel_remote(channel: grpc.Channel):
-    await asyncio.sleep(0)
-    pass
-
-
 @pytest.mark.asyncio
-async def test_prepare_with_zero_params():
+async def test_create_dir():
     with grpc.insecure_channel(remote) as channel:
-        await print_channel_remote(channel)
+        res = await create_dir(channel)
+
+        logging.debug("create_dir: {} {} {}".format(
+            res.err, res.message, res.ipath
+        ))
+        assert res.err == 0
+        # assert len(res.ipath) > 0

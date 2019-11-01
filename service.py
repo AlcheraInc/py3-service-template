@@ -7,8 +7,8 @@
 #   service.py ${service_address}
 #
 import grpc
-import service_pb2
 import service_pb2_grpc
+import impl
 
 from concurrent import futures
 import os
@@ -20,7 +20,7 @@ import asyncio
 def make_service(thread_pool: futures.ThreadPoolExecutor) -> grpc.Server:
     launcher = grpc.server(thread_pool)
     # you can register multiple service to 1 launcher
-    service = service_pb2_grpc.VolumeServicer()
+    service = impl.Basic()
     service_pb2_grpc.add_VolumeServicer_to_server(service, launcher)
     return launcher
 
