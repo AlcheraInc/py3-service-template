@@ -1,0 +1,28 @@
+//
+//  Design: github.com/luncliff (dh.park@alcherainc.com)
+//
+syntax = "proto3";
+package smp; // this is for sample !
+
+message Request {
+  string itype = 1; // [ dir, file ]
+  uint32 perm = 2;  // permission code like 0600
+  string dirpath = 3; // path to the directory
+  string fname = 4;   // for folder, this will be ignored
+  bool force = 5; // for dir, works like mkdir -p
+                  // for file, remove existing one
+}
+
+message Response {
+  uint32 err = 1; // error code from the file system. 0 means successful
+  string message = 2; // error message for the code
+  string ipath = 3; // full path of the created item
+}
+
+service Volume {
+  rpc Create1(Request) returns (Response) {}
+  rpc Create2(stream Request) returns (stream Response) {} 
+  rpc Remove1(Request) returns (Response) {}
+  rpc List(Request) returns (stream Response) {}
+  rpc Exists(stream Request) returns (Response) {}
+}

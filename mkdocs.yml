@@ -1,0 +1,19 @@
+
+site_author: dh.park@alcherainc.com
+site_url: http://github.com/alcherainc/py3-service-template
+
+repo_name: alcherainc/py3-service-template
+repo_url: http://github.com/alcherainc/py3-service-template
+
+copyright: "BSD-3"
+
+theme:
+  name: material
+
+markdown_extensions:
+  - codehilite
+  - footnotes
+  - admonition
+
+nav:
+  - Home: home.md
