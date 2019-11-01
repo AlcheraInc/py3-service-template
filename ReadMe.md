@@ -18,13 +18,15 @@ Basic setup for service prototyping in Alchera Inc.
 
 ### Environment
 
-* OS: Expect Ubuntu Linux for `master` branch
+* OS: Expect **Ubuntu Linux** for `master` branch
 * Python 3.6 +
     * PIP 19 +
 
-### Documentation
+## [How To](./.travis.yml)
 
-Open documents with Mkdocs.
+### Develop
+
+Open documents with [MkDocs](https://www.mkdocs.org/).
 
 ```console
 user@host:/py3-service-template$ mkdocs serve
@@ -36,12 +38,13 @@ INFO    -  Cleaning site directory
 ...
 ```
 
-## [How To](./.travis.yml)
-
-### Develop
-
-> TBA
-
 ### Test
 
-> TBA
+Simply run PyTest
+
+```console
+user@host:/py3-service-template$ pytest .
+================================ test session starts =================================
+platform linux -- Python 3.7.3, pytest-5.2.1, py-1.8.0, pluggy-0.13.0
+...
+```
