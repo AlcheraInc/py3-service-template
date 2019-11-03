@@ -43,5 +43,4 @@ async def test_given_secure_when_createdir_then_success():
     with grpc.secure_channel(remote, creds) as channel:
         dirpath = os.path.join(os.getcwd(), 'hello')
         res = await create_dir(channel, dirpath=dirpath, force=True)
-        assert res.err == 0
         assert len(res.ipath) > 0
